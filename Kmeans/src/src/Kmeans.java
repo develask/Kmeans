@@ -3,6 +3,7 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 import distance.Minkowski;
 import weka.clusterers.Clusterer;
@@ -23,10 +24,23 @@ public class Kmeans implements Clusterer{
 	private Minkowski m;
 	private ArrayList<Instance>[] grupos;
 	
+	private int numIterations;
+	private long miliseconds;
+	
 	public Kmeans(int centroide, int minkowski){
 		this.numCentroides = centroide;
 		this.m = new Minkowski(minkowski);
+		this.numIterations = 50;
+		this.miliseconds = 1000 * 60 * 5;
 	}
+	
+	public void setIterations(int num){
+		this.numIterations = num;
+	}
+	public void setTimeOut(long ms){
+		this.miliseconds = ms;
+	}
+	
 	private boolean compararCentroides(Instance[] centroides1, Instance[] centroides2){
 		if (centroides1 == null || centroides2 == null ) return false;
 		Instance instance;
@@ -52,7 +66,9 @@ public class Kmeans implements Clusterer{
 		this.buscarPrimerosCentroides(centroidesTmp);
 		grupos = new ArrayList[this.numCentroides];
 		int buelta = 0;
-		while(!this.compararCentroides(this.centroides, centroidesTmp)){
+		long TInicio = System.currentTimeMillis();
+		long TFin = System.currentTimeMillis();
+		while(!this.compararCentroides(this.centroides, centroidesTmp) && this.numIterations>buelta++ && TFin-TInicio<this.miliseconds){
 			for (int i = 0; i < this.grupos.length; i++) {
 				this.grupos[i] = new ArrayList<Instance>();
 				
@@ -62,8 +78,9 @@ public class Kmeans implements Clusterer{
 				this.grupos[this.clusterInstance(is)].add(is);
 			}
 			centroidesTmp = this.nuevosCentroides();
-			System.out.println(buelta++ + " | " + centroidesTmp[0] + " , " + centroidesTmp[1] + " , " +centroidesTmp[2]);
-			System.out.println();
+//			System.out.println(buelta + " | " + centroidesTmp[0] + " , " + centroidesTmp[1] + " , " +centroidesTmp[2]);
+//			System.out.println();
+			TFin = System.currentTimeMillis();
 		}
 	}
 	
@@ -161,6 +178,10 @@ public class Kmeans implements Clusterer{
 		return min;
 	}
 
+	public ArrayList<Instance>[] distributionForCluster() throws Exception {
+		return this.grupos;
+	}
+	
 	@Override
 	public double[] distributionForInstance(Instance arg0) throws Exception {
 		// TODO Auto-generated method stub
@@ -179,15 +200,37 @@ public class Kmeans implements Clusterer{
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Instances ins = Lector.getLector().leerInstancias("iris.arff");
-		Remove rm = new Remove();
-		rm.setAttributeIndicesArray(new int[]{ins.classIndex()});
-		rm.setInputFormat(ins);
-		ins = Filter.useFilter(ins, rm);
-		Kmeans k = new Kmeans(3,2);
+		Hashtable<String, String> params = Args.parse(args);
+		Instances ins = Lector.getLector().leerInstancias(params.get("-f"));
+		if (params.get("-class")!=null){
+			Remove rm = new Remove();
+			rm.setAttributeIndicesArray(new int[]{ins.classIndex()});
+			rm.setInputFormat(ins);
+			ins = Filter.useFilter(ins, rm);
+		}
+		String tmp = params.get("-m");
+		int t = 2;
+		switch (tmp!=null?tmp:"3") {
+		case "Manhattan":
+			t = 1;
+			break;
+		case "Euclidea":
+			t = 2;
+			break;
+		default:
+			if (tmp!=null && Integer.parseInt(tmp)>0){
+				t = Integer.parseInt(tmp);
+			}
+		}
+		Kmeans k = new Kmeans(Integer.parseInt(params.get("-k")),t);
+		System.out.println("Se esta generando el cluster");
 		k.buildClusterer(ins);
-		System.out.println("Ya se ha clusterizado.");
-		System.out.println("SSE: " + k.SSE());
+		int i=0;
+		System.out.println("\nSe han creado los siguientes clusters:");
+		for (ArrayList<Instance> instances : k.distributionForCluster()) {
+			System.out.println("\t- Grupo "+ ++i + ":\t" + instances.size() + " instancias.");
+		}
+		System.out.println("\nSSE: " + k.SSE());
 		System.out.println("Silhouette: " + k.silhouette());
 	}
 
