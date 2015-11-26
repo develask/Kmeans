@@ -30,8 +30,8 @@ public class Kmeans implements Clusterer{
 	public Kmeans(int centroide, int minkowski){
 		this.numCentroides = centroide;
 		this.m = new Minkowski(minkowski);
-		this.numIterations = 50;
-		this.miliseconds = 1000 * 60 * 5;
+		this.numIterations = -1;
+		this.miliseconds = -1;
 	}
 	
 	public void setIterations(int num){
@@ -68,7 +68,7 @@ public class Kmeans implements Clusterer{
 		int buelta = 0;
 		long TInicio = System.currentTimeMillis();
 		long TFin = System.currentTimeMillis();
-		while(!this.compararCentroides(this.centroides, centroidesTmp) && this.numIterations>buelta++ && TFin-TInicio<this.miliseconds){
+		while(!this.compararCentroides(this.centroides, centroidesTmp) && (this.numIterations!=-1?this.numIterations>buelta++:true) && (this.miliseconds!=-1?TFin-TInicio<this.miliseconds:true)){
 			for (int i = 0; i < this.grupos.length; i++) {
 				this.grupos[i] = new ArrayList<Instance>();
 				
@@ -209,7 +209,7 @@ public class Kmeans implements Clusterer{
 			ins = Filter.useFilter(ins, rm);
 		}
 		String tmp = params.get("-m");
-		int t = 2;
+		int t=2;
 		switch (tmp!=null?tmp:"3") {
 		case "Manhattan":
 			t = 1;
@@ -222,9 +222,12 @@ public class Kmeans implements Clusterer{
 				t = Integer.parseInt(tmp);
 			}
 		}
+		long TInicio = System.currentTimeMillis();
 		Kmeans k = new Kmeans(Integer.parseInt(params.get("-k")),t);
 		System.out.println("Se esta generando el cluster");
 		k.buildClusterer(ins);
+		long TFin = System.currentTimeMillis();
+		System.out.println("\nSe ha tardado " + (TFin-TInicio) + " milisegundos en generar los clusters.");
 		int i=0;
 		System.out.println("\nSe han creado los siguientes clusters:");
 		for (ArrayList<Instance> instances : k.distributionForCluster()) {
