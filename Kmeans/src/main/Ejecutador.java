@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -23,43 +24,105 @@ public class Ejecutador {
 		Instances ins2 = Filter.useFilter(ins, rm);
 		
 		//parametros del cluster
-		int k = 2;
+		int k = 3;
 		long tiempo= 1000 * 2;
 		
 		// Generamos el Clusterizador
 		Kmeans kmeans = new Kmeans(k,2);
 		kmeans.setTimeOut(tiempo);
-		
-//		ArrayList<Object[]> results = new ArrayList<Object[]>();
-//		double num;
-//		boolean enc;
-//		for (int i = 0; i < 500; i++) {
-//			System.out.print(i + " ");
+		boolean encontrado;
+		ArrayList<int[][]> todos = new ArrayList<int[][]>();
+		class Numero {
+			private double num;
+			Numero(double n){
+				this.num = n;
+			}
+			public double getNum() {
+				return num;
+			}
+			public void setNum(double num) {
+				this.num = num;
+			}
+		}
+		ArrayList<Numero[]> cantidad = new ArrayList<Numero[]>();
+		for (int i = 0; i < 500; i++) {
+			System.out.print(i + " ");
 			kmeans.buildClusterer(ins2);
-//			num = kmeans.SSE();
-//			enc = false;
-//			for (Object[] objects : results) {
-//				if (objects[0].equals(num)){
-//					enc = true;
-//					break;
-//				}
-//			}
-//			if (!enc){
-//				results.add(new Object[]{num,kmeans.distributionForCluster()});
-//			}
-//		}
-//		System.out.println();
-//		for (Object[] objects : results) {
-//			System.out.println("----------------");
-//			System.out.println("Silhouette: " + objects[0]);
-//			int i = 0;
-//			for (ArrayList<Instance> instances : (ArrayList<Instance>[])objects[1]) {
-//				System.out.println("\t- Grupo "+ ++i + ":\t" + instances.size() + " instancias.");
-//			}
-//		}
-		
-		
-		//Clasificar
+			int[][] ma = Ejecutador.getMatrix(ins, kmeans);
+			Ejecutador.ordenar(ma);
+			encontrado = false;
+			Iterator<Numero[]> it = cantidad.iterator();
+			for (int[][] bi : todos) {
+				Numero s = it.next()[0];
+				if (Ejecutador.comprobarIguales(ma, bi)){
+					s.setNum(s.getNum()+1);
+					encontrado = true;
+					break;
+				}
+			}
+			if (!encontrado){
+				todos.add(ma);
+				cantidad.add(new Numero[]{new Numero(1), new Numero(kmeans.silhouette()), new Numero(kmeans.SSE())});
+			}
+			//System.out.println(Ejecutador.impMatrix(ma, ins));
+		}
+		Iterator<Numero[]> it = cantidad.iterator();
+		System.out.println();
+		for (int[][] is : todos) {
+			Numero[] s = it.next();
+			System.out.println("################################################################");
+			System.out.println(s[0].getNum());
+			System.out.println("Silhouette: "+s[1].getNum());
+			System.out.println("SSE: "+s[2].getNum());
+			System.out.println(Ejecutador.impMatrix(is, ins));
+		}
+	}
+	private static boolean comprobarIguales(int[][] uno, int[][] dos){
+		if (uno.length != dos.length) return false;
+		for (int i = 0; i < uno.length; i++) {
+			int[] bat = uno[i];
+			int[] bi = dos[i];
+			if (bat.length!=bi.length) return false;
+			for (int j = 0; j < bat.length; j++) {
+				if(bat[j]!=bi[j]) return false;
+			}
+		}
+		return true;
+	}
+	
+	private static void ordenar(int[][] ma) {
+		int mayor=-1;
+		int num = 0;
+		for (int i = 0; i < ma.length; i++) {
+			int[] fila = ma[i];
+			if (i>=fila.length) break;
+			for (int j = i; j < fila.length; j++) {
+				int r = fila[j];
+				if (r>mayor){
+					num = j;
+					mayor = r;
+				}
+			}
+			Ejecutador.movercl(ma, i, num);
+			num = 0;
+			mayor = -1;
+		}
+	}
+	private static void movercl(int[][] ma, int a, int b){
+		for (int[] is : ma) {
+			int tmp = is[a];
+			is[a] = is[b];
+			is[b] = tmp;
+		}
+	}
+	private static void moverln(int[][] is, int a, int b){
+		int[] tmp = is[a];
+		is[a] = is[b];
+		is[b] = tmp;
+	}
+
+	private static int[][] getMatrix(Instances ins, Kmeans kmeans) throws Exception{
+		int k = kmeans.numberOfClusters();
 		int[][] grupos = new int[ins.classAttribute().numValues()][k];
 		for (int i = 0; i < grupos.length; i++) {
 			int[] js = grupos[i];
@@ -71,14 +134,12 @@ public class Ejecutador {
 		for (Instance instance : ins) {
 			grupos[(int)instance.classValue()][kmeans.clusterInstance(instance)]++;
 		}
-		String result = "";
+		return grupos;
+	}
+	private static String impMatrix(int[][] grupos, Instances ins){
+		String result="";
 		result += ("------------Matriz De Confusión-------\n");
 		result += ("\n");
-//		result += "\t";
-//		for (int i = 0; i < grupos.length; i++) {
-//			result +=("+-------");
-//		}
-//		result+="\n";
 		result += "\t";
 		for (int i = 0; i < grupos[0].length; i++) {
 			result +=("  "+(char)(97+i) + "\t");
@@ -102,6 +163,6 @@ public class Ejecutador {
 			}
 			result+="+\n";
 		}
-		System.out.println(result);
+		return result;
 	}
 }
