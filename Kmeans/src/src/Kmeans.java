@@ -27,6 +27,8 @@ public class Kmeans implements Clusterer{
 	private int numIterations;
 	private long miliseconds;
 	
+	private int IterationsDone;
+	
 	public Kmeans(int centroide, int minkowski){
 		this.numCentroides = centroide;
 		this.m = new Minkowski(minkowski);
@@ -68,7 +70,9 @@ public class Kmeans implements Clusterer{
 		int buelta = 0;
 		long TInicio = System.currentTimeMillis();
 		long TFin = System.currentTimeMillis();
+		this.IterationsDone = 0;
 		while(!this.compararCentroides(this.centroides, centroidesTmp) && (this.numIterations!=-1?this.numIterations>buelta++:true) && (this.miliseconds!=-1?TFin-TInicio<this.miliseconds:true)){
+			this.IterationsDone++;
 			for (int i = 0; i < this.grupos.length; i++) {
 				this.grupos[i] = new ArrayList<Instance>();
 				
@@ -243,6 +247,10 @@ public class Kmeans implements Clusterer{
 
 	public void setClusters(int k) {
 		this.numCentroides = k;
+	}
+
+	public int getIterationsDone() {
+		return IterationsDone;
 	}
 
 }

@@ -32,24 +32,30 @@ public class Ejecutador {
 		//kmeans.setTimeOut(tiempo);
 		double mediaSSE;
 		double mediaShilouette;
-		int repeticiones = 10;
+		double repeticiones = 30;
 		long tI, tF, mediaT;
-		System.out.println("K\tSSE\tShilouette\tTiempo");
+		int mediaIt;
+		System.out.println("K\tSSE\tSilhouette\tTiempo\tIteraciones");
 		for (int K=2; K<=50; K++){
 			kmeans.setClusters(K);
 			mediaSSE=0;
 			mediaShilouette=0;
 			mediaT = 0;
+			mediaIt = 0;
 			for (int repeticion=0; repeticion<repeticiones; repeticion++){
 				tI = System.currentTimeMillis();
 				kmeans.buildClusterer(ins2);
 				tF = System.currentTimeMillis();
 				
+				mediaIt += kmeans.getIterationsDone();
 				mediaT += tF-tI;
 				mediaSSE += kmeans.SSE();
 				mediaShilouette += kmeans.silhouette();
 			}
-			System.out.println(K+"\t"+(""+(mediaSSE/repeticiones)).replace(".", ",")+"\t"+(""+(mediaShilouette/repeticiones)).replace(".", ",")+"\t"+(mediaT/repeticiones));
+			System.out.println(K+"\t"+(""+(mediaSSE/repeticiones)).replace(".", ",")+
+					"\t"+(""+(mediaShilouette/repeticiones)).replace(".", ",")+
+					"\t"+((mediaT/repeticiones)+"").replace(".", ",")+
+					"\t"+((mediaIt/repeticiones)+"").replace(".", ","));
 		}
 		
 		
