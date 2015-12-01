@@ -78,8 +78,6 @@ public class Kmeans implements Clusterer{
 				this.grupos[this.clusterInstance(is)].add(is);
 			}
 			centroidesTmp = this.nuevosCentroides();
-//			System.out.println(buelta + " | " + centroidesTmp[0] + " , " + centroidesTmp[1] + " , " +centroidesTmp[2]);
-//			System.out.println();
 			TFin = System.currentTimeMillis();
 		}
 	}
@@ -88,6 +86,10 @@ public class Kmeans implements Clusterer{
 		Instance[] nuevos = new Instance[this.numCentroides];
 		for (int c=0; c<this.grupos.length; c++) {
 			ArrayList<Instance> grupo = grupos[c];
+			if (grupo.size() == 0){
+				this.buscarPrimerosCentroides(nuevos);
+				break;
+			}
 			double[] attr = new double[this.instancias.numAttributes()];
 			for (Instance ins : grupo) {
 				for (int i = 0; i < attr.length; i++) {
@@ -111,6 +113,7 @@ public class Kmeans implements Clusterer{
 			do{
 				r = (int) Math.floor(Math.random() * this.instancias.numInstances());
 			}while(nums.contains(r));
+			nums.add(r);
 			centroidesTmp[i] = this.instancias.get(r);
 		}
 	}
@@ -163,6 +166,7 @@ public class Kmeans implements Clusterer{
 		for (Instance instance : grupo) {
 			suma+=this.m.calcularDistancia(ins, instance);
 		}
+		if (suma==0.0) return 0.0;
 		return suma/(grupo.size()-(tuyo?1:0));
 	}
 	
@@ -235,6 +239,10 @@ public class Kmeans implements Clusterer{
 		}
 		System.out.println("\nSSE: " + k.SSE());
 		System.out.println("Silhouette: " + k.silhouette());
+	}
+
+	public void setClusters(int k) {
+		this.numCentroides = k;
 	}
 
 }

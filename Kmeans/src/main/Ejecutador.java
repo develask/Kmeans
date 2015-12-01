@@ -15,7 +15,7 @@ import weka.filters.unsupervised.attribute.Remove;
 public class Ejecutador {
 	public static void main(String[] args) throws Exception {
 		//Cargamos el iris.arff
-		Instances ins = Lector.getLector().leerInstancias("iris.arff");
+		Instances ins = Lector.getLector().leerInstancias("colon.arff");
 		
 		// Copiamos el mismo archivo pero sin la clase
 		Remove rm = new Remove();
@@ -24,12 +24,38 @@ public class Ejecutador {
 		Instances ins2 = Filter.useFilter(ins, rm);
 		
 		//parametros del cluster
-		int k = 3;
-		long tiempo= 1000 * 2;
+		int k = 2;
+		//long tiempo= 1000 * 2;
 		
 		// Generamos el Clusterizador
 		Kmeans kmeans = new Kmeans(k,2);
-		kmeans.setTimeOut(tiempo);
+		//kmeans.setTimeOut(tiempo);
+		double mediaSSE;
+		double mediaShilouette;
+		int repeticiones = 10;
+		long tI, tF, mediaT;
+		System.out.println("K\tSSE\tShilouette\tTiempo");
+		for (int K=2; K<=50; K++){
+			kmeans.setClusters(K);
+			mediaSSE=0;
+			mediaShilouette=0;
+			mediaT = 0;
+			for (int repeticion=0; repeticion<repeticiones; repeticion++){
+				tI = System.currentTimeMillis();
+				kmeans.buildClusterer(ins2);
+				tF = System.currentTimeMillis();
+				
+				mediaT += tF-tI;
+				mediaSSE += kmeans.SSE();
+				mediaShilouette += kmeans.silhouette();
+			}
+			System.out.println(K+"\t"+(""+(mediaSSE/repeticiones)).replace(".", ",")+"\t"+(""+(mediaShilouette/repeticiones)).replace(".", ",")+"\t"+(mediaT/repeticiones));
+		}
+		
+		
+		
+		//Mi metodo
+		/*
 		boolean encontrado;
 		ArrayList<int[][]> todos = new ArrayList<int[][]>();
 		class Numero {
@@ -45,8 +71,13 @@ public class Ejecutador {
 			}
 		}
 		ArrayList<Numero[]> cantidad = new ArrayList<Numero[]>();
-		for (int i = 0; i < 500; i++) {
-			System.out.print(i + " ");
+		int i2 =0;
+		int max = 50;
+		for (int i = 0; i < max; i++) {
+			if (i2<(int)((i*10)/max)){
+				i2 =(int)((i*10)/max);
+				System.out.print("#");
+			}
 			kmeans.buildClusterer(ins2);
 			int[][] ma = Ejecutador.getMatrix(ins, kmeans);
 			Ejecutador.ordenar(ma);
@@ -75,7 +106,7 @@ public class Ejecutador {
 			System.out.println("Silhouette: "+s[1].getNum());
 			System.out.println("SSE: "+s[2].getNum());
 			System.out.println(Ejecutador.impMatrix(is, ins));
-		}
+		}*/
 	}
 	private static boolean comprobarIguales(int[][] uno, int[][] dos){
 		if (uno.length != dos.length) return false;
