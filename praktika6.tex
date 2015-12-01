@@ -5,7 +5,8 @@
 %\usepackage[utf8]{inputenc}
 %\usepackage{mathtools}
 \usepackage{amsfonts}
-\usepackage{amssymb}
+\usepackage{float}
+%\usepackage{amssymb}
 \usepackage{fancyvrb}
 \usepackage{indentfirst}
 \usepackage{array}
@@ -32,157 +33,17 @@
 \maketitle
 
 \section{Introducción:}
-\subsection{Árboles De Decisión}
-
-
-
-
-\subsection{Sistemas De Reglas}
-
-
-\subsection{Comparación}
-
-Antes de compararlas entre sí, empezaremos dando las ventajas y desventajas tanto de los árboles de decisión como de los sistemas de Reglas:
-
-\begin{itemize}
-\item Ventajas de los \textbf{árboles de Decisión}:
-	\begin{itemize}
-		\item Fácil traducción de árbol a reglas, pero no a la inversa.
-		\item Capaz de representar cualquier subconjunto de instancias.
-		\item Fácil de entender e interpretar. Las personas son capaces de comprender los modelos de árboles de decisión después de una breve explicación.
-		\item Requiere poca preparación de los datos. Otras técnicas a menudo requieren la normalización de datos, utilización de variables ficticias necesitan ser creados y valores en blanco deben ser eliminados.
-		\item Capaz de manejar tanto datos numéricos y categorizados. Otras técnicas son generalmente especializadas en el análisis de conjuntos de datos que tienen sólo un tipo de variable. (Por ejemplo, las normas de relación sólo se pueden utilizar con variables nominales, mientras que las redes neuronales pueden ser utilizados sólo con variables numéricas.)
-		\item Es posible validar un modelo utilizando pruebas estadísticas. Eso hace que sea posible tener en cuenta la fiabilidad del modelo.
-		\item Robusto. Se desempeña bien incluso si sus suposiciones son violadas por el verdadero modelo a partir del cual se generaron los datos.
-		\item Funciona bien con grandes conjuntos de datos. Grandes cantidades de datos pueden ser analizados 	utilizando recursos informáticos estándar en un plazo razonable.
-	\end{itemize}
-\item Limitaciones:
-	\begin{itemize}
-		\item El problema del aprendizaje de un árbol de decisión óptimo es conocido por ser NP-completo bajo varios aspectos de optimización e incluso para conceptos simples. En consecuencia, los algoritmos prácticos de aprendizaje de árboles de decisiones se basan en heurísticas como el algoritmo voraz donde decisiones localmente óptimas se hacen en cada nodo. Tales algoritmos no pueden garantizar devolver el árbol de decisión globalmente óptimo. Para reducir el efecto codicioso de optimidad local han sido propuestos algunos métodos tales como la distancia de doble información (DDI).
-		\item Aprendices de árbol de decisiones pueden crear árboles excesivamente complejos que no generalizan bien a partir de los datos de entrenamiento. (Esto se conoce como sobreajuste.) Mecanismos tales como la poda son necesarios para evitar este problema (con la excepción de algunos algoritmos tales como el Enfoque de Inferencia Condicional, que no requiere la poda)).
-		\item Hay conceptos que son difí­ciles de aprender porque los árboles de decisión no expresan fácilmente, como XOR, paridad o problemas de multiplexor. En tales casos, el árbol de decisión se vuelve prohibitivamente grande. Los arboles pueden ser muy recursivos.
-		\item Los nodos de un árbol decisión implican probar un atributo particular. 
-	\end{itemize}
-\end{itemize}
-\begin{itemize}
-\item Ventaja de usar el formalismo de \textbf{reglas}:
-	\begin{itemize}
-		\item Claridad
-		\item Modularidad
-		\item Expresividad: pueden representar cualquier conjunto de instancias
-		\item Métodos generalizables a primer orden de manera natural
-		\item Formalismo usado en sistemas basados en el conocimiento
-		\item La unificación de patrones es una idea importante y poderosa en razonamiento automatizado.
-		\item Los sistemas basados en reglas que utilizan la unificación de patrones son extremadamente flexibles y poderoso.
-	\end{itemize}
-\item Limitaciones:
-	\begin{itemize}
-		\item Encadenamiento infinito. 
-		\item Incorporación de conocimiento nuevo contradictorio.
-		\item Modificación de reglas existentes.
-		\item Ineficiencia (necesidad de modularizar o de introducir metarreglas).
-		\item Opacidad (dificultad de establecer relaciones).
-		\item Adaptación al dominio (rápido crecimiento del número de reglas).
-	\end{itemize}
-\end{itemize}
-
-Ya sabiendo las ventajas y desventajas de cada uno de los métodos de clasificación diremos que una de las conclusiones que podemos sacar es que los dos métodos son muy similares y que en realidad utilizan las mismas premisas para clasificar las instancias.
-
-	La gran diferencia entre los dos clasificadores es que en los árboles se utilizan reglas simples, mientras que, en las en los clasificadores de reglas se utilizan las reglas compuestas en algunos casos. 
+\subsection{Exposición de la práctica:}
+En la práctica presentada se nos pide implementar el algoritmo K-Means para el conjunto de datos colon.arff. Para ello hemos desarrollado nuestro código en el lenguaje de programación Java y después hemos creado nuestro ejecutador .jar. Además hemos desarrollado este documento para plasmar las partes más importantes de la práctica.
 
 \subsection{Objetivos:}
-La tarea consiste en hacer una comparativa de dos modelos diferentes basados en arboles de decisión y sistemas de reglas. Los modelos son los siguientes: JRip y J48. Para ello contestaremos ciertas preguntas para obtener información clave de cada modelo.	
+Los objetivos son claros; conseguir un algoritmo eficiente y efectivo para clusterizar un conjunto de datos del que no se sabe la clase. El código que hemos desarrollado no es dependiente a un solo conjunto de datos,ya que es posible utilizarlo en más de un conjunto de datos.
 
-Como conclusión podemos mencionar que si un sistema de aprendizaje de reglas es apropiado si lo que se busca es tener un claro entendimiento del método que se está realizando, ya que lo que es fundamental es tener un número pequeño de reglas para clasificar los datos.
+Como hemos recibido el archivo colon.arff para desarrollar la práctica vamos a analizar el archivo para ver su contenido. En el archivo de datos podemos encontrar 2000 variables predictoras. No tiene clase. Como son tantas variables nos limitaremos a decir que todas ellas son de tipo numérico, por lo tanto no habrá que discretizar ninguna variable y tampoco habrá que eliminar ninguna para poder implementar el algoritmo K-Means, ya que este solamente acepta variables de este tipo.
 
-En el archivo de datos podemos encontrar 9 variables predictoras más la clase. Son las siguientes:
-\begin{itemize}
-	 \item 1. Class: no-recurrence-events, recurrence-events
-     \item 2. age: 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-99.
-     \item 3. menopause: lt40, ge40, premeno.
-   	 \item 4. tumor-size: 0-4, 5-9, 10-14, 15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59.
-     \item 5. inv-nodes: 0-2, 3-5, 6-8, 9-11, 12-14, 15-17, 18-20, 21-23, 24-26, 27-29, 30-32, 33-35, 36-39.
-     \item 6. node-caps: yes, no.
-   	 \item 7. deg-malig: 1, 2, 3.
-     \item 8. breast: left, right.
-   	 \item 9. breast-quad: left-up, left-low, right-up, right-low, central.
-\end{itemize}
+Para clusterizar nuestras instancias vamos a aplicar distintos grupos y haremos mediciones. Empezaremos dándole entrada del parámetro k a valor 2, el cual nos dice que cantidad de grupos vamos a tener para clusterizar las instancias. Una vez calculadas las particiones de datos calcularemos las métricas SSE y Silhouette para evaluarlo. 
 
-Las variables número 2, 4 y 5 son variables de con valores de tipo numérico pero están discretizadas. La variable 7 tiene valores de tipo numérico. Las variables número 1, 3, 6, 8, 9 son de tipo nominal.
-
-La clase a predecir es la siguiente: irradiat. Puede tomar los valores yes y no. Como podemos comprobar la variable es de tipo nominal.	
-
-Disponemos de un total de 286 instancias para inferir el modelo.
-
-\section{Resultados:}
-
-\subsection{JRIP}
-	Al crear el clasificador JRIP con el dataset \textit{breast-cancer.arff} se han creado 3 reglas:
-	
-\begin{center}
-\begin{BVerbatim}
-(deg-malig = 3) and (node-caps = yes) => Class=recurrence-events (30.0/7.0)
-(inv-nodes = 3-5) and (breast = left) => Class=recurrence-events (11.0/4.0)
-=> Class=no-recurrence-events (245.0/55.0)
-\end{BVerbatim}
-\end{center}
-
-	Como se puede ver, después de cada reglas, en caso de que se cumpla, la instancia quedaría clasificada, y mientras que no se cumpla, nos llevaría a una nueva regla hasta que dicha instancia cumpla con la regla y este clasificador la clasifique.
-	
-	Los números que se representan entre paréntesis, al lado de la clase, tienen dos significados. El primero,  nos indica el número de instancias que han sido filtradas por esa regla y han sido clasificados satisfactoriamente. La segunda, sin embargo, es justo lo contrario. Nos dice cuantas instancias han sido filtradas por esa regla y además han sido mal clasificadas. 	
-	
-	En este tipo de modelos, la última regla no tiene condición porque se refiere al resto. Para este caso, no han quedado reglas muy complejas, pero podemos ver que aunque las dos primeras condiciones clasifiquen igual, están separadas por tema de rendimiento. Ya que la mayoría que clasifica como `\textit{recurrence-events}' sólo entraran por la primera condición. 
-	
-	Este es el formalismo para la creación de reglas de JRip. Consiste en hacer una lista
-ordenada de reglas conjuntivas y evaluarlas en orden para encontrar la primera regla que se cumple
-sobre el ejemplo a clasificar. Una vez encontrada dicha regla se ha encontrado la regla más eficiente
-para ese ejemplo y es asignado con una etiqueta de valor de salida.
-
-El algoritmo de aprendizaje de reglas IREP integra:
-\begin{itemize}
-\item el algoritmo REP (reduced error pruning)
-\item el algoritmo de aprendizaje de reglas separate-and-conquer
-\end{itemize}
-
-IREP: Reglas en forma normal disyuntiva
-\begin{itemize}
-\item Una regla (rule) es una conjunción de literales $Rj$ constituida por la intersección de los 3 literales siguientes
-$$Rj \equiv (X_{7} = x^{1}_{7}) \& (X_{14} = x^{2}_{14}) \& (X_{24} = x^{1}_{24})$$
-\item Un conjunto de reglas (rule set) está formado por una disyunción de reglas
-\item Una regla parcial (partial rule), $R^{par}_{j}$ de una determinada regla $R_{j}$ es la intersección de un subconjunto de los literales a partir de los cuales se forma $R_{j}$
-$$R^{par}_{j} \equiv (X_{7} = x^{1}_{7}) \& (X_{14} = x^{2}_{14})$$
-\end{itemize}
-
-$D$ conjunto de casos o patrones etiquetados se particiona en dos subconjuntos:
-\begin{itemize}
-\item $D_{Pos}$ conjunto de patrones positivos; $D_{Neg}$ conjunto de patrones negativos
-\item Cada uno de los subconjuntos anteriores se subdivide en otros dos subconjuntos:
-\begin{itemize}
-\item $D_{Grow - Pos}$ y $D_{Prune - Pos}$ subconjuntos relacionados respectivamente con la construcción y el podado de las reglas.
-\item Análogamente $D_{Grow - Neg}$ y $D_{Prune - Neg}$
-\end{itemize}
-\item $D = D_{Pos} \cup D_{Neg} = (D_{Grow -Pos} \cup D_{Prune - Pos}) \cup (D_{Grow - Neg} \cup D_{Prune - Neg})$
-\item $D_{Pos} \cap D_{Neg} = D_{Grow -Pos} \cap D_{Prune - Pos} = D_{Grow - Neg} \cap D_{Prune - Neg} = \emptyset$
-\end{itemize}
-\begin{center}
-\includegraphics[width=0.7\textwidth]{./fotojrip.png}
-\end{center}
-
-$IREP$ induce - basándose en $D_{Grow - Pos} y D_{Grow - Neg}$ el conjunto de reglas (rule set) de manera voraz, escogiéndose en cada paso añadir el mejor literal a la regla parcial partial rule en construcción
-
-$GrowRule$ añade de forma repetida a la regla parcial (partial rule) $R^{Par}$ el literal que da origen a la regla parcial $R'^{Par}$ con mayor valor del criterio:
-
-$$\upsilon ( R^{Par}, R'^{Par}, D_{Grow - pos}, D_{Grow - Neg}) = cu \left[ - log_{2} \left( \frac{pos}{pos + neg} \right) + log_{2} \left( \frac{pos'}{ pos' + neg} \right) \right]$$
-
-Donde $cu$ es el porcentaje de ejemplos en $D_{Grow - Pos}$ que siendo cubiertos por $R^{Par}$ están también cubiertos por $R'^{Par}$ (regla parcial más específica que  $R^{Par}$).
-
-$Pos$ (respectivamente $Neg$) es el número de ejemplos en $D_{Grow - Pos} (D_{Grow - Neg})$ cubiertos por la regla $R^{Par}$. Y $Pos'$ (respectivamente $Neg'$) es el número de ejemplos en $D_{Grow - Pos} (D_{Grow - Neg})$ cubiertos por la regla $R'^{Par}$.
-
-El proceso de crecimiento, $GrowRule$, finaliza cuando no se encuentra ningún literal cuya inclusión en la regla parcial permita que la regla especializada mejore el criterio $\upsilon (R^{Par}, R'^{Par}, D_{Grow - Pos}, D_{Grow - Neg})$.
-
-Entonces comienza con el proceso de podado, $PruneRule$, de dicha regla. $PruneRule$ plantea el borrado, de manera secuencial, y empezando por el último literal introducido a la regla en su fase de crecimiento. Se van a ir borrando (podando) literales mientras se mejore el criterio $\upsilon (Rule, D_{Prune - Pos}, D_{Prune - Neg})$, siendo
-$$\upsilon (Rule, D_{Prune - Pos}, D_{Prune - Neg}) = \frac{pos + (Neg - neg) }{Pos + Neg}$$
-donde $Pos$ (respectivamente $Neg$) es el número de ejemplos en $D_{Prune - Pos} (D_{Prune - Neg})$ cubiertos por la regla, y $Pos$ (respectivamente $Neg$) es el número de ejemplos en $D_{Prune - Pos} (D_{Prune - Neg})$.\\
+\section{Pseudocódigo del algoritmo:}
 
 \begin{algorithm}[H] 
 \caption{JRip} 
@@ -206,233 +67,28 @@ donde $Pos$ (respectivamente $Neg$) es el número de ejemplos en $D_{Prune - Pos}
 \Return RuleSet
 \end{algorithm} 
 
-RIPPER
+\section{Experimentación y Resultados:}
+Hemos ejecutado el programa y nos han salido estos resultados:
 
-\begin{enumerate}
-\item Métrica alternativa para la fase de poda
-
-\begin{itemize}
-\item $R_{1}$ cubre 2000 ejemplos positivos en $D_{Prune - Pos}$ y 1000 ejemplos negativos en $D_{Prune - Neg}$. $R_{2}$ cubre 1000 ejemplos positivos en $D_{Prune - Pos}$ y 1 ejemplo negativo en $D_{Prune - Neg}$.
-\item $IREP$ va a preferir $R_{1}$ a $R_{2}$, ya que
-$$\frac{2000 + (Neg - 1000)}{Pos + neg} > \frac{1000 + (Neg - 1)}{Pos + Neg}$$
-y sin embargo es intuitivo que la $R_{2}$ es preferible a $R_{1}$
-\item $RIPPER$ basa su poda en el criterio siguiente:
-$$\upsilon (Rule, D_{Prune - Pos}, D_{Prune - Neg}) = \frac{pos  - neg }{Pos + Neg}$$
-\end{itemize}
-
-
-\item Incorporación de un heurístico para determinar cuándo parar el proceso de añadir reglas.
-\item $RIPPER$ posteriormente a todo el proceso visto para $IREP$ efectúa una búsqueda local para optimizar el conjunto de reglas (rule set) de dos maneras diferentes:
-\begin{itemize}
-\item Reemplazando una regla $R_{i}$ que forma parte del rule set $\{ R_{1}, \dots , R_{i - 1}, R_{i},
-R_{i + 1}, \dots , R_{k} \}$ por $R'_{i}$, siempre y cuando el rule set correpondiente tenga un menor error en la clasificación en Dprune?pos ? Dprune?neg
-\item Revisar una determinada regla Ri añadiendo literales para que así se consiga un
-menor error en $D_{Prune - Pos} \cup D_{Prune - Neg}$.
-\end{itemize}
-
-\end{enumerate}
-	
-\subsection{J48}
-
-Se pide que se cree un clasificador J48 podado y otro sin podar, y para ello vamos a explicar en que se diferencian un árbol podado y otro sin podar. Lo primero de todo es mencionar que los árboles podados son mucho más simples que los sin podar, y por ello computacionalmente son más lentos. Los árboles que están sin podar pueden utilizar el mismo atributo en distintos nodos y los podado en cambio sólo lo utilizan una vez.
-
-Para ver como funciona el J48 (\ref{j48}) vamos a explicarlo con el pseudocódigo.\\
-
-\begin{algorithm}[H] 
-\caption{J48} 
-\label{j48}
-\SetKwInOut{Input}{entrada} 
-\SetKwInOut{Output}{salida}
-\Input{\\
-	$R$: Conjunto de atributos no clasificados.\\
-	$C$: Atributo clasificador.\\
-	$S$: Conjunto de entrenamiento.
-} 
-\Output{Árbol de decisión.} 
-\lIf{$S = \emptyset$} { 
-	\Return $\emptyset$
-} 
-\lIf{$\forall (i1, i2) \in S : c(i1) = c(i2)$} { 
-	\Return $Nodo\{c(i1)\}$
-} 
-\eIf{$R = \emptyset$}
-{
-	\Return $Nodo\{ c(  \argmax_{i} c(i) \leftarrow \{ i \in S : c(i)  \}  )  \} $ 
-} { 
-	\For{$x\leftarrow$R$_1$ \KwTo R$_n$} 
-	{
-		$g_{\max} =  \argmax_{x}( ganancia(x,S) )$ \tcp*[r]{$g_{\max}$ es al atributo con mayor ganancia} 
-
-	}
-	$res := Tree\{\}$\\
-	\For{$valor\leftarrow  (g_{\max})_1$ \KwTo $(g_{\max})_m$} 
-	{
-		$S_{k} \in  S : \forall i \in S_{k} \Leftrightarrow atributo(i, g_{\max}) = valor $\\
-		\tcp*[r]{$S_{k}$ es el subcounjunto de instancias con el valor de $g_{\max}$ igual} 
-		$res += J48(R-\{g_{\max}\}, C, S_{k})$
-
-	}
-	\Return $res$ \tcp*[r]{Se devuelve un nodo no terminal, que pregunta por el atributo $g_{\max}$ } 
-} 
-\end{algorithm} 
-\newpage
-Como se puede ver, el J48 es un método recursivo. Para cada iteración, este método necesita 3 parámetro de entrada:
-\begin{enumerate}
-\item \textbf{R}: Conjunto de atributos no clasificados. Es decir, aquellos atributos que no sean la clase y que todavía no se hayan utilizado en ningún otro nodo.
-\item \textbf{C}: Atributo clasificador. La clase.
-\item \textbf{S}: Conjunto de entrenamiento. En la primera iteración, será el conjunto de entrenamiento completo.
-\end{enumerate}
-
-Y como resultado tendríamos un árbol.
-
-En cuanto al algoritmo, hay que mencionar que de las 3 primeras condiciones salen nodos terminales. En la primera ($S = \emptyset$), es el caso de que no quedan instancias de donde adquirir información y por eso queda un poco abierto el resultado. En estos casos se podría clasificar como la clase mayoritaria. El segundo de los casos ($\forall (i1, i2) \in S : c(i1) = c(i2)$), es el caso de que todas las instancias por entrenar son se la misma clase. En ese caso el nodo terminal sería un nodo que clasifique con dicha clase. Y en el tercer caso ($R = \emptyset$), en caso de que no queden atributos a clasificar (porque ya se han aplicado dichos atributos en nodos anteriores), se crearía un nodo terminal con la clase mayoritaria en el conjunto de instancias a entrenar.
-
-Por último, en caso de que no sea un nodo terminal, hay que crear un nodo que sea otro árbol. Para ello lo primero que hay que hacer es coger el atributo que nos dé mayor información ($g_{\max} =  \argmax_{x}( ganancia(x,S) )$) y luego crearemos otro árbol con diferentes ramas, que cada una sera otro árbol creado con el mismo algoritmo de J48. Donde al algoritmo se le pasaran los siguientes parámetros (mencionados arriba):
-
-\begin{enumerate}
-\item \textbf{R}: $R-\{g_{\max}\} \rightarrow$ Donde serán los mismos atributos menos el clasificado en esa iteración.
-\item \textbf{C}: Atributo clasificador. La clase. Siempre es la misma.
-\item \textbf{S}: Conjunto de entrenamiento. ($S_{k} \in  S : \forall i \in S_{k} \Leftrightarrow atributo(i, g_{\max}) = valor $) En esta iteración solo serán las instancias que sean iguales a el valor del atributo seleccionado en la iteración.
-\end{enumerate}
-
-Una vez explicado el funcionamiento del algoritmo, sacaremos una conclusión. En los árboles no tiene porque verse representados todos los atributos. Ya que los atributos se eligen mirando la información que den, y si mediante ese atributo se sabe la clase, no es necesario mirar el resto de atributos.
-
-\begin{itemize}
-\item \textbf{J48 (Prunned)}
-
-Cogiendo el conjunto de datos del fichero \textit{breast-cancer.arff} y el programa \textit{Weka}, usaremos el clasificador J48 para clasificarlo pero podándolo, para que quede un árbol mas pequeño.
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=0.6\textwidth]{./J48(prunned).PNG}
-\end{center}
-\caption{Árbol Podado}
+\begin{figure}[H]
+\caption{gráfico 1} 
+\centering
+\includegraphics[width=0.6\textwidth]{./grafica1.png}
 \end{figure}
 
-Podemos ver que tras clasificarlo, el árbol sólo ha utilizado dos atributos para completar todas las opciones (node-caps y deg-malig). Y a pesar de eso no saca un mal resultado, con un accuracy de $0.755$.
-
-{\footnotesize
-\begin{verbatim}
-=== Summary ===
-
-Correctly Classified Instances         216               75.5245 %
-Incorrectly Classified Instances        70               24.4755 %
-Kappa statistic                          0.2826
-Mean absolute error                      0.3676
-Root mean squared error                  0.4324
-Relative absolute error                 87.8635 %
-Root relative squared error             94.6093 %
-Coverage of cases (0.95 level)         100      %
-Mean rel. region size (0.95 level)     100      %
-Total Number of Instances              286     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,960    0,729    0,757      0,960    0,846      0,339    0,584     0,736     no-recurrence-events
-                 0,271    0,040    0,742      0,271    0,397      0,339    0,584     0,436     recurrence-events
-Weighted Avg.    0,755    0,524    0,752      0,755    0,713      0,339    0,584     0,647     
-
-=== Confusion Matrix ===
-
-   a   b   <-- classified as
- 193   8 |   a = no-recurrence-events
-  62  23 |   b = recurrence-events
-\end{verbatim}
-}
-
-\item \textbf{J48 (Unprunned)}
-
-En cuanto al J48 sin podar, el árbol que se crea es bastante mayor al anterior, aunque tampoco se utilizan todos los atributos.
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=\textwidth]{./J48(unprunned).PNG}
-\end{center}
-\caption{Árbol Sin Podar}
+Como podemos ver según el parámetro k va en aumento, las métricas van obteniendo distintos valores importantes. Son importantes porque están altamente correlacionados. Según el \ref{figura1} gráfico 1 la medida de SSE baja según que el parámetro k aumenta mientras que la medida Silhouette aumenta mientras que el parámetro k aumenta. Esto no quiere decir que el mejor número para el parámetro k sea cuanto más grande mejor. Simplemente quiere decir que como es normal si un conjunto de datos tiene 70 instancias y hacemos 50 clusters, es muy fácil que las instancias estén muy bien repartidas ya que solamente hay otras 20 instancias en las que podríamos tener dudas.\\
+\begin{figure}[H]
+\caption{gráfico 2}
+\label{figura1} 
+\centering
+\includegraphics[width=0.6\textwidth]{./grafica2.png}
 \end{figure}
-
-Aunque a primera vista parezca que el árbol sin podar debería dar un resultado mejor ya que crea tantas ramas como sea necesario para el dataset empleado, podemos ver que saca peor resultado. (accuracy: $0.695$)
-
-{\footnotesize
-\begin{verbatim}
-=== Summary ===
-
-Correctly Classified Instances         199               69.5804 %
-Incorrectly Classified Instances        87               30.4196 %
-Kappa statistic                          0.2043
-Mean absolute error                      0.3478
-Root mean squared error                  0.5143
-Relative absolute error                 83.1224 %
-Root relative squared error            112.5118 %
-Coverage of cases (0.95 level)          83.9161 %
-Mean rel. region size (0.95 level)      75.3497 %
-Total Number of Instances              286     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,846    0,659    0,752      0,846    0,796      0,210    0,579     0,731     no-recurrence-events
-                 0,341    0,154    0,483      0,341    0,400      0,210    0,578     0,405     recurrence-events
-Weighted Avg.    0,696    0,509    0,672      0,696    0,678      0,210    0,578     0,634     
-
-=== Confusion Matrix ===
-
-   a   b   <-- classified as
- 170  31 |   a = no-recurrence-events
-  56  29 |   b = recurrence-events
-\end{verbatim}
-}
-
-\end{itemize}
-\newpage
-\subsection{Comparación J48-JRip:}
-
-	Podemos decir con certeza que las reglas que se crean en los dos algoritmos son completamente diferentes. En el algoritmo JRIP las reglas que se utilizan son reglas complejas, mientras que en el algoritmo J48 son reglas simples. 
+En cuanto al gráfico del tiempo vemos que cuanto más grande es el parámetro k el tiempo de ejecución para cada partición es mayor. Esto quiere decir, que cuantos más clusters existan, más distancias se deben de calcular entre los centroides y las instancias, por lo tanto, un mayor tiempo de ejecución. 
+\section{Conclusiones:}
+El algoritmo K-Means tiene una gran limitación, y es que es muy dependiente del conjunto de datos. Es un algoritmo sencillo de implementar pero pese a su simplicidad es bastante eficiente. Los algoritmos de evaluación interna SSE(p) y Silhouette son bastante completos, aunque a nuestro parecer el Silhouette es el mejor de los dos.
 	
-Definimos una regla simple como una regla en la que solamente se trata a un atributo, como por ejemplo:
-
-\begin{center}
-\begin{BVerbatim}
-node-caps = yes
-\end{BVerbatim}
-\end{center}
-
-Definimos una regla compleja como una regla en la que toman parte mas de un atributo, como por ejemplo:
-
-\begin{center}
-\begin{BVerbatim}
-(deg-malig = 3) and (node-caps = yes)
-\end{BVerbatim}
-\end{center}	
-
-En esta regla toman parte los atributos deg-malig y node-caps, y hacen una regla compleja ya que se tiene que cumplir las dos condiciones para poder filtrar una instancia a través de esa regla. Solamente se filtrará si los atributos de la instancia a filtrar cumple con las dos reglas a la vez. 
-
-Otra de las mayores diferencias, es que JRIP hace una seguida de reglas para determinar la clase. De esta manera, este clasificador por cada regla, si se cumple, esa instancia quedaría clasificada. Mientras que con J48, después de confirmar una condición, no tiene porque clasificar la instancia, sino que puede que lleve a otro nodo donde se cuestione otra condición.
-
-	Vamos a comparar los resultados de TPR y FPR utilizando las distintas métricas que se proponen en la práctica:
-	Primero obtendremos los valores que necesitamos de cada una de las métricas. Para las dos métricas utilizaremos el algoritmo J48 con poda.
-\begin{enumerate}
-	\item 10-Fold Cross-validation:
-	\begin{enumerate}
-		\item JRip:	TPR=0.71; FPR=0.489  
-		\item J48: TPR=0.755; FPR=0.524
-	\end{enumerate}
-	\item Hold-out: 66% train y 33% test:
-	\begin{enumerate}
-		\item JRip:	TPR=0.66; FPR=0.63 
-		\item J48: TPR=0.68; FPR=0.502  
-	\end{enumerate}	
-\end{enumerate}
-Como podemos comprobar los resultados que obtenemos con las distintas métricas de evaluación varían.
-
-	En el algoritmo JRip tanto el TPR como el FPR dan valores contrarios, es decir, mientras que en el TPR con la métrica 10-Fold Cross-validation da un valor más alto que con la métrica Hold-out, el TPR es justamente lo contrario, con la métrica 10-Fold Cross-validation da un valor más bajo que usando la métrica Hold-out. Con los resultados que hemos obtenido se puede concluir que el trozo que se ha utilizado para evaluar el Hold-out había un gran número de instancias que se clasificaban como positivas mientras que unas pocas eran solo clasificadas como negativas.
-	
-	En el algoritmo J48 tanto el TPR como el FPR dan valores de los que podemos concluir que eran de esperar. Normalmente cuando se usa la métrica 10-Fold Cross-validation los valores TPR y FPR al igual que el de Recall suben, mientras que usando Hold-Out quedan por debajo de los anteriores en la mayoría de los casos. 
 \section{Valoración Subjetiva:}
-\textbf{Ieltzu}:  Ha sido una práctica bastante interesante en cuanto a programación. Al principio pensábamos que iba a ser más difícil implementar el algoritmo, pero una vez que empezamos salió todo bastante fluido. Nuestros mayores problemas fueron entender los algoritmos SSE(p) y el Silhouette. Por lo demás muy fácil. Al crear los gráficos tenemos una visión mucho mejor de como cambian los valores SSE y Silhouette según sus parámetros.
-
-
+\textbf{Ieltzu}:  Ha sido una práctica bastante interesante en cuanto a programación. Al principio pensábamos que iba a ser más difícil implementar el algoritmo, pero una vez que empezamos salió todo bastante fluido. Nuestros mayores problemas fueron entender los algoritmos SSE(p) y el Silhouette. Por lo demás muy fácil. Al crear los gráficos tenemos una visión mucho mejor de como cambian los valores SSE y Silhouette según sus parámetros.\\
 \textbf{Mikel}:
 
 
@@ -442,7 +98,8 @@ Como podemos comprobar los resultados que obtenemos con las distintas métricas d
 
 \section*{Bibliografia}
 \begin{itemize}
-	\item 
+	\item https://es.wikipedia.org/wiki/K-means
+	\item https://exceltotal.com/como-crear-un-grafico-en-excel/
 \end{itemize}
 
 \end{document}
