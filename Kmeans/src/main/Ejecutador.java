@@ -32,7 +32,7 @@ public class Ejecutador {
 		//kmeans.setTimeOut(tiempo);
 		double mediaSSE;
 		double mediaShilouette;
-		double repeticiones = 30;
+		double repeticiones = 10;
 		long tI, tF, mediaT;
 		int mediaIt;
 		System.out.println("K\tSSE\tSilhouette\tTiempo\tIteraciones");
